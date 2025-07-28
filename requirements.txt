@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+pydantic-settings
+sqlalchemy
+psycopg2-binary
+qdrant-client
+langchain
+langchain-community
+langchain-google-genai
+google-generativeai
+sentence-transformers
+pypdf
+redis
