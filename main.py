@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.db import vector_db, metadata_db
+from app.api.router import api_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -16,6 +17,8 @@ async def lifespan(app: FastAPI):
 
 # Pass the lifespan manager to the FastAPI app instance
 app = FastAPI(title="Palm Mind Technology Assessment", lifespan=lifespan)
+
+app.include_router(api_router, prefix="/api") 
 
 @app.get("/")
 def read_root():
