@@ -35,7 +35,11 @@ def create_agent_executor():
     
     # Create the prompt template. This is the agent's "brain" and instructions.
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are a helpful assistant named PalmBot. You must use the 'document_search' tool to answer questions about the provided documents."),
+        ("system", """You are a helpful assistant named PalmBot. Your primary function is to answer questions based on a set of documents provided by the user.
+        - **ALWAYS** use the `document_search` tool to answer any user question about people, places, topics, or any other specific information.
+        - Do not use your own general knowledge to answer questions about the documents. If the information is not in the documents, say that you cannot find the answer in the provided context.
+        - If the user asks a general greeting like "hello" or "how are you", you can respond conversationally.
+        """),
         ("human", "{input}"),
         MessagesPlaceholder(variable_name="agent_scratchpad"), # This is where the agent does its "thinking"
     ])
@@ -43,10 +47,9 @@ def create_agent_executor():
     # Initialize the LLM. We are using Gemini Pro.
     # The `convert_system_message_to_human=True` is a specific requirement for some older Gemini models.
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-pro-latest", 
+        model="gemini-1.5-flash-latest", # <-- The new, correct model name for your key
         google_api_key=settings.GOOGLE_API_KEY, 
-        temperature=0, 
-        convert_system_message_to_human=True
+        temperature=0
     )
     
     # Create the agent itself by combining the LLM, the tools, and the prompt.
