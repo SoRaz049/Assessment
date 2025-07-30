@@ -49,3 +49,13 @@ def get_vector_store() -> Qdrant:
         embeddings=embeddings,
     )
     return vector_store
+
+
+def get_retriever():
+    """
+    Creates a retriever from the Qdrant vector store.
+    A retriever is a LangChain object that knows how to fetch relevant documents.
+    """
+    vector_store = get_vector_store()
+    # We configure the retriever to return the top 4 most similar documents.
+    return vector_store.as_retriever(search_kwargs={"k": 4})
