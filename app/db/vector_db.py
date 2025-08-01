@@ -3,6 +3,9 @@ from langchain_community.embeddings import SentenceTransformerEmbeddings
 from app.core.config import settings
 from langchain_community.vectorstores import Qdrant
 
+from langchain.retrievers.multi_query import MultiQueryRetriever
+from langchain_google_genai import ChatGoogleGenerativeAI
+
 _qdrant_client = None
 _embedding_function = None
 
@@ -53,9 +56,9 @@ def get_vector_store() -> Qdrant:
 
 def get_retriever():
     """
-    Creates a retriever from the Qdrant vector store.
-    A retriever is a LangChain object that knows how to fetch relevant documents.
+    Creates a standard retriever from the Qdrant vector store.
     """
+    print("Creating a base vector store retriever.")
     vector_store = get_vector_store()
-    # We configure the retriever to return the top 4 most similar documents.
-    return vector_store.as_retriever(search_kwargs={"k": 4})
+    # We will use this as the base for our multi-query retriever in the agent service
+    return vector_store.as_retriever(search_kwargs={"k": 5})
