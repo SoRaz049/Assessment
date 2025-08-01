@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from app.core.config import settings
 from app.db.models import Base
 
-from .models import FileMetadata
+from .models import FileMetadata, InterviewBooking
 
 # Create the engine to connect to the database
 engine = create_engine(settings.DATABASE_URL)
@@ -36,3 +36,17 @@ def save_file_metadata(db: Session, file_name: str, chunking_strategy: str, embe
     db.commit()
     db.refresh(db_file)
     return db_file
+
+def save_booking(db: Session, full_name: str, email: str, date: str, time: str) -> int:
+    """Saves an interview booking to the PostgreSQL database."""
+    booking = InterviewBooking(
+        full_name=full_name, 
+        email=email, 
+        booking_date=date, 
+        booking_time=time
+    )
+    db.add(booking)
+    db.commit()
+    db.refresh(booking)
+    print(f"Successfully saved booking for {full_name} with ID {booking.id} to database.")
+    return booking.id
